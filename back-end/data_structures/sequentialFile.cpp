@@ -240,6 +240,28 @@ public:
         T coachRegister;
 
      // TODO ME DIO SUEÑO :D
+        if (!main.is_open() || !aux.is_open()) {
+            throw runtime_error("No se pudo abrir uno de los archivos");
+        }
+
+        while (main.read((char*)&coachRegister, sizeof(T))) {
+            if ((compare_coach_with_key(coachRegister, key2) || strcmp(coachRegister.getCode(), key2) == 0)
+                && !compare_coach_with_key(coachRegister, key1)) {
+                results.push_back(coachRegister);
+                }
+        }
+
+        while (aux.read((char*)&coachRegister, sizeof(T))) {
+            if ((compare_coach_with_key(coachRegister, key2) || strcmp(coachRegister.getCode(), key2) == 0)
+                && !compare_coach_with_key(coachRegister, key1)) {
+                results.push_back(coachRegister);
+                }
+        }
+
+        main.close();
+        aux.close();
+
+        return results;
 
         return results;
     }
