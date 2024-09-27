@@ -29,23 +29,7 @@ Este proyecto se centra en la integración de datos estructurados y no estructur
 
 ### DOMINIO DE DATOS
 Elegimos 2 datasets: `coaches.csv` y `athletes.csv`
-
-- **coaches.csv**
-
-  ```cpp
-
-  struct {
-  
-
-
-  }
-
-
-
-   
-   
-- **athletes.csv**
-
+Hace un dominio de datos conformados por:
 
 
 
@@ -94,7 +78,7 @@ Elegimos 2 datasets: `coaches.csv` y `athletes.csv`
 
      
 
-## ANÁLISIS COMPARATIVO
+### ANÁLISIS COMPARATIVO
 `En base a los accesos en memoria secundaria`
 
 
@@ -108,6 +92,12 @@ Elegimos 2 datasets: `coaches.csv` y `athletes.csv`
 ## SQL PARSER
 La implementación del parser para consultas SQL se ha llevado a cabo siguiendo un enfoque escalable. En primer lugar, hemos desarrollado un scanner el cual se encarga de tokenizar los lexemas de una cadena de consulta SQL
 
+## RESULTADOS EXPERIMENTALES
+
+### CUADRO COMPARATIVO DEL DESEMPEÑO DE LAS TÉCNICAS DE INDEXACIÓN
+`Inserción` `Búsqueda`
+
+### DISCUSIÓN Y ANÁLISIS DE LOS RESULTADOS
 
 
 
