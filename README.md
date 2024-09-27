@@ -10,6 +10,10 @@
   - [AVL File Organization](#avl-file-organization)
   - [Sequential File Organization](#sequential-file-organization)
   - [Extendible Hashing](#extendible-hashing)
+- [Parser SQL](#sql-parser)
+- [Resultados  Experimentales](#resultados-experimentales)
+  - [Cuadro comparativo del desempeño de las técnicas](#Cuadro-comparativo-del-desempeño-de-las-tecnicas-de-indexación)
+  - [Discusión y Análisis de Resultados](#Discusión-y-análisis-de-resultados)
 
 ## Introducción
 Este proyecto se centra en la integración de datos estructurados y no estructurados, y en el desarrollo de un mini gestor de bases de datos que facilitará la comprensión y la aplicación de técnicas de organización e indexación de archivos.
@@ -28,9 +32,12 @@ Este proyecto se centra en la integración de datos estructurados y no estructur
   - Mostrar los resultados de forma interactiva
 
 ### DOMINIO DE DATOS
-Elegimos 2 datasets: `coaches.csv` y `athletes.csv`
+Elegimos 2 datasets: `coaches.csv` y `athletes.csv`  
 Hace un dominio de datos conformados por:
 
+| **int**           | 
+|----------------------|
+| **char**         |
 
 
 ### RESULTADOS ESPERADOS AL APLICAR TÉCNICAS DE INDEXACIÓN
