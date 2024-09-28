@@ -46,14 +46,8 @@ class Coach {
         char code[8]
         char name[41]
         char gender [7]
-        char function[11]
-        char category [6]
-        char country_code [4]
         char country [16]
-        char country_long[31]
         char disciplines [21]
-        char events [6]
-        birth_date [11]
 }
 ```
 ```cpp
