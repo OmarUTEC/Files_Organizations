@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+/back-end/data_structures/parser/
+/back-end/

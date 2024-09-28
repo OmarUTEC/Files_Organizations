@@ -105,6 +105,3 @@ La implementación del parser para consultas SQL se ha llevado a cabo siguiendo 
 `Inserción` `Búsqueda`
 
 ### DISCUSIÓN Y ANÁLISIS DE LOS RESULTADOS
-
-
-

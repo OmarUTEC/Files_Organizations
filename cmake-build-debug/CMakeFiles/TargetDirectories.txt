@@ -1,0 +1,3 @@
+/home/omarch/Escritorio/BD2/Files_Organizations/cmake-build-debug/CMakeFiles/Files_Organizations.dir
+/home/omarch/Escritorio/BD2/Files_Organizations/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/omarch/Escritorio/BD2/Files_Organizations/cmake-build-debug/CMakeFiles/rebuild_cache.dir
