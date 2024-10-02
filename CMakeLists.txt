@@ -23,4 +23,5 @@ add_executable(Files_Organizations
         back-end/parserSequential/main.cpp
         back-end/parserSequential/Parser.hpp
         back-end/parserSequential/Scanner.hpp
-        back-end/parserSequential/Token.hpp)
+        back-end/parserSequential/Token.hpp
+        data_structures/avl/avl.cpp)
