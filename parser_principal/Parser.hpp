@@ -40,7 +40,6 @@ public:
     void parse();
     string reportParse();
     void setInput(string input);
-
 };
 
 void Parser::setInput(string value) {
@@ -202,9 +201,9 @@ bool Parser::parseDeleteSent() {
             string value = memoria["values"].back();
             
             Token::Type pre_index;
-            if (memoria["table"][0] == "player")
+            if (memoria["table"][0] == "coach")
                 pre_index = indexesCoach[atribute];
-            else if (memoria["table"][0] == "game")
+            else if (memoria["table"][0] == "olympics")
                 pre_index = indexesOlympics[atribute];
             else {
                 report = "No existe la tabla con ese nombre";
@@ -267,7 +266,7 @@ bool Parser::parseIndexSent() {
         throwParser("Parser error de sintaxis");
         return false;
     }
-    if (match(Token::HASH) || match(Token::ISAM) || match(Token::SEQ)) {
+    if (match(Token::HASH) || match(Token::AVL) || match(Token::SEQ)) {
         Token::Type token = previous->type;
         if (match(Token::LPAREN)) {
             if (!parseAtribute()) return false;
@@ -276,9 +275,9 @@ bool Parser::parseIndexSent() {
                 return false;
             }
             string atribute = memoria["atributes"].back();
-            if (memoria["table"][0] == "player")
+            if (memoria["table"][0] == "coach")
                 indexesCoach[atribute] = token;
-            else if (memoria["table"][0] == "game")
+            else if (memoria["table"][0] == "olympics")
                 indexesOlympics[atribute] = token;
             else {
                 report = "No existe la tabla con ese nombre";
@@ -296,7 +295,6 @@ bool Parser::parseIndexSent() {
     return false;
 }
 
-
 bool Parser::parseSelectSent() {
     int check_atr = parseAtributes();
     if (!check_atr) return false;
@@ -309,7 +307,7 @@ bool Parser::parseSelectSent() {
     if (match(Token::WHERE)) {
         if (!parseAtribute()) return false;
         if (match(Token::LESS) || match(Token::LESSEQUAL) || match(Token::GREATER) || match(Token::GREATEREQUAL) || match(Token::EQUAL)) {
-            Token::Type comparator = previous->type;
+            Token::Type comparator = previous -> type;
             if (!parseValue()) return false;
 
             // consulta select
@@ -318,9 +316,9 @@ bool Parser::parseSelectSent() {
             memoria["atributes"].pop_back();
             Token::Type atr_index; 
 
-            if (memoria["table"][0] == "player")
+            if (memoria["table"][0] == "coach")
                 atr_index = indexesCoach[k_atrib];
-            else if (memoria["table"][0] == "game")
+            else if (memoria["table"][0] == "olympics")
                 atr_index = indexesOlympics[k_atrib];
             else {
                 report = "No existe la tabla con ese nombre";
@@ -355,9 +353,9 @@ bool Parser::parseSelectSent() {
                     string end = memoria["values"][1];
                     Token::Type atr_index; 
 
-                    if (memoria["table"][0] == "player")
+                    if (memoria["table"][0] == "coach")
                         atr_index = indexesCoach[k_atrib];
-                    else if (memoria["table"][0] == "game")
+                    else if (memoria["table"][0] == "olympics")
                         atr_index = indexesOlympics[k_atrib];
                     else {
                         report = "No existe la tabla con ese nombre";
@@ -413,7 +411,7 @@ bool Parser::parseSentence() {
         return false;
     }
     if (!match(Token::PTCOMMA)) {
-        throwParser("Ok pero Falta el ptcomma amig@");
+        throwParser("Ok");
         return false;
     }
     return res;

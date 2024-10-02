@@ -4,7 +4,6 @@
 #include "Token.hpp"
 #include <unordered_map>
 
-
 class Scanner {
 public:
   Scanner();
@@ -45,6 +44,7 @@ void Scanner::init_reserved() {
   reserved["and"] = Token::AND;
   reserved["or"] = Token::OR;
   reserved["between"] = Token::BETWEEN;
+  reserved["avl"] = Token::AVL;
 }
 
 Scanner::Scanner(): input(""), first(0), current(0) {
