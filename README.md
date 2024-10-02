@@ -630,4 +630,4 @@ DELETE FROM coach WHERE DNI = 10961234;
 
 
 ### VIDEO EXPLICATIVO
-- [Link](https://drive.google.com/file/d/1GkQky48zzojgdwsu4RxI1Jx3pBk40FuT/view?usp=sharing)
+- [Link](https://drive.google.com/file/d/1x5q0wvYmBVo9ryubo3ml9bSXAxjj29-g/view?usp=sharing)
