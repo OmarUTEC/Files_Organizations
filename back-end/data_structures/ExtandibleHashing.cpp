@@ -12,57 +12,69 @@
 using namespace std;
 
 struct Record {
-    int id;
-    char district[50];
-    int year;
-    int month;
-    int day;
-    int vol;
-    char street[100];
+    char code[8];
+    char name[36];
+    char gender[21];
+    char Assistant_Coach[17];
+    char country_code[5];
+    char country[17];
+    char disciplines[21];
 
     // Constructor por defecto
-    Record() : id(-1), year(-1), month(-1), day(-1), vol(-1) {
-        memset(district, 0, sizeof(district));
-        memset(street, 0, sizeof(street));
+    Record() {
+        memset(code, 0, sizeof(code));
+        memset(name, 0, sizeof(name));
+        memset(gender, 0, sizeof(gender));
+        memset(Assistant_Coach, 0, sizeof(Assistant_Coach));
+        memset(country_code, 0, sizeof(country_code));
+        memset(country, 0, sizeof(country));
+        memset(disciplines, 0, sizeof(disciplines));
     }
 
-    // Constructor con ID
-    Record(int id) : id(id), year(-1), month(-1), day(-1), vol(-1) {
-        memset(district, 0, sizeof(district));
-        memset(street, 0, sizeof(street));
+    // Constructor con parámetros
+    Record(const char* c, const char* n, const char* g, const char* a, const char* cc, const char* co, const char* d) {
+        strncpy(code, c, sizeof(code));
+        strncpy(name, n, sizeof(name));
+        strncpy(gender, g, sizeof(gender));
+        strncpy(Assistant_Coach, a, sizeof(Assistant_Coach));
+        strncpy(country_code, cc, sizeof(country_code));
+        strncpy(country, co, sizeof(country));
+        strncpy(disciplines, d, sizeof(disciplines));
+
     }
 
     // Serializar y deserializar como antes
     void serialize(fstream &file) const {
-        file.write(reinterpret_cast<const char*>(&id), sizeof(id));
-        file.write(district, sizeof(district));
-        file.write(reinterpret_cast<const char*>(&year), sizeof(year));
-        file.write(reinterpret_cast<const char*>(&month), sizeof(month));
-        file.write(reinterpret_cast<const char*>(&day), sizeof(day));
-        file.write(reinterpret_cast<const char*>(&vol), sizeof(vol));
-        file.write(street, sizeof(street));
+        file.write(code, sizeof(code));
+        file.write(name, sizeof(name));
+        file.write(gender, sizeof(gender));
+        file.write(Assistant_Coach, sizeof(Assistant_Coach));
+        file.write(country_code, sizeof(country_code));
+        file.write(country, sizeof(country));
+        file.write(disciplines, sizeof(disciplines));
     }
 
     void deserialize(fstream &file) {
-        file.read(reinterpret_cast<char*>(&id), sizeof(id));
-        file.read(district, sizeof(district));
-        file.read(reinterpret_cast<char*>(&year), sizeof(year));
-        file.read(reinterpret_cast<char*>(&month), sizeof(month));
-        file.read(reinterpret_cast<char*>(&day), sizeof(day));
-        file.read(reinterpret_cast<char*>(&vol), sizeof(vol));
-        file.read(street, sizeof(street));
+        file.read(code, sizeof(code));
+        file.read(name, sizeof(name));
+        file.read(gender, sizeof(gender));
+        file.read(Assistant_Coach, sizeof(Assistant_Coach));
+        file.read(country_code, sizeof(country_code));
+        file.read(country, sizeof(country));
+        file.read(disciplines, sizeof(disciplines));
     }
 
     // Método para mostrar los datos del registro
-    void display()  {
-        cout << "ID: " << id << endl;
-        cout << "Distrito: " << district << endl;
-        cout << "Fecha: " << day << "/" << month << "/" << year << endl;
-        cout << "Volumen: " << vol << endl;
-        cout << "Calle: " << street << endl;
+     void display() const {
+        cout << "Code: " << code << endl;
+        cout << "Name: " << name << endl;
+        cout << "Gender: " << gender << endl;
+        cout << "Assistant Coach: " << Assistant_Coach << endl;
+        cout << "Country Code: " << country_code << endl;
+        cout << "Country: " << country << endl;
+        cout << "Disciplines: " << disciplines << endl;
     }
 };
-
 
 
 // Definición de la estructura Bucket
@@ -85,7 +97,7 @@ struct Bucket {
 
     void insert(const Record& record) {
         for (auto& rec : records) {
-            if (rec.id == -1) { // Si encontramos un espacio vacío
+            if (rec.code[0] == '\0') { // Si encontramos un espacio vacío
                 rec = record;
                 size++;
                 break;
@@ -165,7 +177,7 @@ public:
         }
 
         // Escribir los buckets iniciales
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 4; ++i) {
             Bucket bucket(FB);
             bucket.serialize(dataFile);
         }
@@ -188,12 +200,17 @@ public:
         generarBinarios(n - 1, binarioActual + '1', resultados);
     }
 
-    string hashing(int key) {
-        return bitset<32>(key).to_string().substr(32 - D);
-    }
+   
+
+    string hashing(const char* code) {
+    hash<string> hasher;
+    size_t hashValue = hasher(string(code));  // Convertimos el código a una cadena y calculamos el hash
+    return bitset<32>(hashValue).to_string().substr(32 - D); // Ajustamos la profundidad D
+}
+
 
     bool add(const Record& record) {
-        string hashBits = hashing(record.id);
+        string hashBits = hashing(record.code);
         int bucketPos = posBuckets[hashBits];
 
         fstream dataFileStream(datafile, ios::binary | ios::in | ios::out);
@@ -235,27 +252,27 @@ public:
         }
     }
 
-    Record search(int key) {
-        string hashBits = hashing(key);
-        if (posBuckets.find(hashBits) != posBuckets.end()) {
-            int bucketPos = posBuckets[hashBits];
-            fstream dataFileStream(datafile, ios::binary | ios::in);
-            dataFileStream.seekg(bucketPos);
-            Bucket bucket(FB);
-            bucket.deserialize(dataFileStream);
-            dataFileStream.close();
+    Record search(const char* code) {
+    string hashBits = hashing(code);
+    if (posBuckets.find(hashBits) != posBuckets.end()) {
+        int bucketPos = posBuckets[hashBits];
+        fstream dataFileStream(datafile, ios::binary | ios::in);
+        dataFileStream.seekg(bucketPos);
+        Bucket bucket(FB);
+        bucket.deserialize(dataFileStream);
+        dataFileStream.close();
 
-            for (const Record& rec : bucket.records) {
-                if (rec.id == key) {
-                    return rec;
-                }
+        for (const Record& rec : bucket.records) {
+            if (strcmp(rec.code, code) == 0) { // Comparar códigos
+                return rec;
             }
         }
-        return Record(); // No encontrado
     }
+    return Record(); // No encontrado
+}
 
-    Record remove(int key) {
-        string hashBits = hashing(key);
+    Record remove(const char* code) {
+        string hashBits = hashing(code);
         if (posBuckets.find(hashBits) != posBuckets.end()) {
             int bucketPos = posBuckets[hashBits];
             fstream dataFileStream(datafile, ios::binary | ios::in | ios::out);
@@ -264,9 +281,9 @@ public:
             bucket.deserialize(dataFileStream);
 
             for (auto& rec : bucket.records) {
-                if (rec.id == key) {
+                if (rec.code == code) {
                     Record removedRecord = rec;
-                    rec.id = -1;  // Marcar como eliminado
+                    rec.code[0] = '\0';  // Marcar como eliminado
                     bucket.size--;
                     dataFileStream.seekp(bucketPos);
                     bucket.serialize(dataFileStream);
@@ -280,9 +297,6 @@ public:
 };
 
 
-
-
-// Función para cargar datos desde un archivo CSV
 void loadFromCSV(const string& csvFile, DynamicHash& hashTable) {
     ifstream file(csvFile);
 
@@ -292,120 +306,128 @@ void loadFromCSV(const string& csvFile, DynamicHash& hashTable) {
     }
 
     string line, word;
+    int recordCount = 0;  // Contador para limitar los registros
+    const int maxRecords = 20;  // Máximo de registros a procesar
+
     // Leer la primera línea que contiene los encabezados
     getline(file, line);
 
-    // Leer cada línea del archivo CSV
-    while (getline(file, line)) {
+    // Leer cada línea del archivo CSV y detenerse después de 20 registros
+    while (getline(file, line) && recordCount < maxRecords) {
         stringstream ss(line);
         vector<string> fields;
 
-        while (getline(ss, word, ',')) {
+        // Dividir cada campo del CSV usando el punto y coma como delimitador
+        while (getline(ss, word, ';')) {
             fields.push_back(word);
         }
 
+        // Verificar que el número de campos en cada línea sea el correcto (7 campos)
         if (fields.size() == 7) {
             Record record;
-            record.id = stoi(fields[0]);
-            strcpy(record.district, fields[1].c_str());
-            record.year = stoi(fields[2]);
-            record.month = stoi(fields[3]);
-            record.day = stoi(fields[4]);
-            record.vol = stoi(fields[5]);
-            strcpy(record.street, fields[6].c_str());
+
+            // Copiar cada campo en su respectivo atributo del registro
+            strncpy(record.code, fields[0].c_str(), sizeof(record.code) - 1);
+            strncpy(record.name, fields[1].c_str(), sizeof(record.name) - 1);
+            strncpy(record.gender, fields[2].c_str(), sizeof(record.gender) - 1);
+            strncpy(record.Assistant_Coach, fields[3].c_str(), sizeof(record.Assistant_Coach) - 1);
+            strncpy(record.country_code, fields[4].c_str(), sizeof(record.country_code) - 1);
+            strncpy(record.country, fields[5].c_str(), sizeof(record.country) - 1);
+            strncpy(record.disciplines, fields[6].c_str(), sizeof(record.disciplines) - 1);
+
+            // Asegurar que cada cadena esté correctamente terminada
+            record.code[sizeof(record.code) - 1] = '\0';
+            record.name[sizeof(record.name) - 1] = '\0';
+            record.gender[sizeof(record.gender) - 1] = '\0';
+            record.Assistant_Coach[sizeof(record.Assistant_Coach) - 1] = '\0';
+            record.country_code[sizeof(record.country_code) - 1] = '\0';
+            record.country[sizeof(record.country) - 1] = '\0';
+            record.disciplines[sizeof(record.disciplines) - 1] = '\0';
 
             // Insertar el registro en la tabla hash
-            cout << "Insertando registro desde CSV..." << endl;
             hashTable.add(record);
+            recordCount++;  // Incrementar el contador
+
+            // Mostrar el registro que se acaba de insertar
+            cout << "Registro insertado:" << endl;
             record.display();
-            cout << "---------------------------" << endl;
+            cout << "------------------------" << endl;
+        } else {
+            cerr << "Error: El número de campos en la línea no coincide con el formato esperado." << endl;
         }
     }
 
     file.close();
 }
 
+
+
 // Función para realizar pruebas con las funcionalidades de DynamicHash
-void testHashTable(DynamicHash& hashTable) {
-    // Buscar registros insertados
-    cout << "\n=== Buscando registros insertados ===" << endl;
-    for (int id = 1; id <= 4; ++id) {
-        cout << "Buscando registro con ID: " << id << endl;
-        Record foundRecord = hashTable.search(id);
-        if (foundRecord.id != -1) {
-            cout << "Registro encontrado: " << endl;
-            foundRecord.display();
-        } else {
-            cout << "Registro con ID " << id << " no encontrado." << endl;
-        }
-        cout << "===========================" << endl;
-    }
 
-    // Eliminar un registro y verificar
-    cout << "\n=== Eliminando registro con ID 2 ===" << endl;
-    int deleteId = 2;
-    Record removedRecord = hashTable.remove(deleteId);
-    if (removedRecord.id != -1) {
-        cout << "Registro eliminado: " << endl;
-        removedRecord.display();
-    } else {
-        cout << "Registro con ID " << deleteId << " no encontrado para eliminar." << endl;
-    }
-    cout << "===========================" << endl;
 
-    // Verificación después de eliminación
-    cout << "\n=== Verificación después de eliminar registro con ID 2 ===" << endl;
-    Record foundRecord = hashTable.search(deleteId);
-    if (foundRecord.id != -1) {
-        cout << "Error: El registro con ID " << deleteId << " sigue presente después de la eliminación." << endl;
-    } else {
-        cout << "Verificación exitosa: Registro con ID " << deleteId << " no encontrado después de la eliminación." << endl;
-    }
-    cout << "===========================" << endl;
-
-    // Insertar un nuevo registro
-    Record newRecord(5);
-    strcpy(newRecord.district, "District E");
-    newRecord.year = 2024;
-    newRecord.month = 9;
-    newRecord.day = 12;
-    newRecord.vol = 500;
-    strcpy(newRecord.street, "Street 5");
-
-    cout << "\n=== Insertando nuevo registro con ID 5 ===" << endl;
-    hashTable.add(newRecord);
-    newRecord.display();
-    cout << "===========================" << endl;
-
-    // Verificar la inserción del nuevo registro
-    cout << "\n=== Verificación de nuevo registro con ID 5 ===" << endl;
-    foundRecord = hashTable.search(5);
-    if (foundRecord.id != -1) {
-        cout << "Nuevo registro encontrado: " << endl;
-        foundRecord.display();
-    } else {
-        cout << "Error: Registro con ID 5 no encontrado después de la inserción." << endl;
-    }
-    cout << "===========================" << endl;
-}
-
-int main() {
+int main(){
     // Crear el sistema de hashing dinámico
     string datafile = "datafile.bin";
     string indexfile = "indexfile.bin";
-    int D = 3;  // Profundidad global inicial de 3 bits
-    int FB = 2; // Capacidad de cada bucket (número máximo de registros por bucket)
+    int D = 16;  // Profundidad global inicial de 16 bits
+    int FB = 4;  // Capacidad de cada bucket (número máximo de registros por bucket)
 
     // Inicializar la tabla de hash extendible
     DynamicHash hashTable(datafile, indexfile, D, FB);
 
-    // Cargar los datos desde un archivo CSV
-    string csvFile = "records.csv";
+    // Cargar los datos desde un archivo CSV (20 registros máximo)
+    string csvFile = "coaches.csv";
     loadFromCSV(csvFile, hashTable);
 
-    // Ejecutar pruebas para verificar las funcionalidades
-    testHashTable(hashTable);
+    // Pruebas después de la inserción
+    cout << "\n=== Registros insertados desde el CSV ===" << endl;
+    const char* codeToSearch = "1533246";  // Ajusta este código según los registros cargados
+    cout << "Buscando registro con Code: " << codeToSearch << endl;
+    Record foundRecord = hashTable.search(codeToSearch);
+    if (strcmp(foundRecord.code, "") != 0) {
+        cout << "Registro encontrado: " << endl;
+        foundRecord.display();
+    } else {
+        cout << "Registro con Code " << codeToSearch << " no encontrado." << endl;
+    }
 
-    return 0;
-}
+    // Eliminar un registro y verificar
+    const char* codeToDelete = "1535775";
+    cout << "\n=== Eliminando registro con Code: " << codeToDelete << " ===" << endl;
+    Record removedRecord = hashTable.remove(codeToDelete);
+    if (strcmp(removedRecord.code, "") != 0) {
+        cout << "Registro eliminado: " << endl;
+        removedRecord.display();
+    } else {
+        cout << "Registro con Code " << codeToDelete << " no encontrado para eliminar." << endl;
+    }
+
+    // Verificar la eliminación
+    cout << "\n=== Verificación después de eliminar registro con Code: " << codeToDelete << " ===" << endl;
+    foundRecord = hashTable.search(codeToDelete);
+    if (strcmp(foundRecord.code, "") != 0) {
+        cout << "Error: El registro con Code " << codeToDelete << " sigue presente después de la eliminación." << endl;
+    } else {
+        cout << "Verificación exitosa: Registro con Code " << codeToDelete << " no encontrado después de la eliminación." << endl;
+    }
+
+    // Insertar un nuevo registro
+    /*
+    Record newRecord("123456", "New Name", "Non-Binary", "New Coach", "GBR", "United Kingdom", "Athletics");
+    cout << "\n=== Insertando nuevo registro con Code '123456' ===" << endl;
+    hashTable.add(newRecord);
+    newRecord.display();
+
+    // Verificar la inserción del nuevo registro
+    cout << "\n=== Verificación de nuevo registro con Code '123456' ===" << endl;
+    foundRecord = hashTable.search("123456");
+    if (strcmp(foundRecord.code, "") != 0) {
+        cout << "Nuevo registro encontrado: " << endl;
+        foundRecord.display();
+    } else {
+        cout << "Error: Registro con Code '123456' no encontrado después de la inserción." << endl;
+    }
+    */
+    return 0; 
+    }
 
