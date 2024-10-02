@@ -628,9 +628,6 @@ DELETE FROM coach WHERE DNI = 10961234;
 | 100             |         |             |              |
 | 1000            |     |            |                |
 
-### DISCUSIÓN Y ANÁLISIS DE LOS RESULTADOS
 
-
-##CONCLUSIONES
-
-
+### VIDEO EXPLICATIVO
+- [Link](https://drive.google.com/file/d/1GkQky48zzojgdwsu4RxI1Jx3pBk40FuT/view?usp=sharing)
