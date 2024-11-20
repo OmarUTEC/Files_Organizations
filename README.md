@@ -1,6 +1,6 @@
 # PROYECTO 1: ORGANIZACIÓN DE ARCHIVOS
 
-| [**Javier Omar Chavarria Humareda**](https://github.com/OmarUTEC) | [**Yacira Nicol Campoverde**](https://github.com/YaciraUTEC) | [**Aldair Sanchez Seminario**](https://github.com/Aldair456) | [**Alejandro Sebastian Chipayo **](https://) |
+| [**Javier Omar Chavarria Humareda**](https://github.com/OmarUTEC) | [**Yacira Nicol Campoverde**](https://github.com/YaciraUTEC) | [**Aldair Sanchez Seminario**](https://github.com/Aldair456) |  |
 |-------------------------------------------------------------------|----------------------------------------------------------------|-------------------------------------------------------------------|---------------------------------------------------------------------|
 
 ## Tabla de Contenidos
